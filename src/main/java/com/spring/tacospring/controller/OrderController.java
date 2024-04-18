@@ -2,7 +2,9 @@ package com.spring.tacospring.controller;
 
 
 import com.spring.tacospring.model.TacoOrder;
+import com.spring.tacospring.service.TacoOrderService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -14,9 +16,12 @@ import org.springframework.web.bind.support.SessionStatus;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
 public class OrderController {
+    private final TacoOrderService tacoOrderService;
+
     @GetMapping("/current")
     public String orderForm() {
         return "orderForm";
@@ -30,6 +35,7 @@ public class OrderController {
         }
 
         log.info("Order submitted: {}", order);
+        tacoOrderService.save(order);
         sessionStatus.setComplete();
         return "redirect:/";
     }

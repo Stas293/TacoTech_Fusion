@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Taco {
+    private Long id;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @NotNull
     @Size(min = 5, message = "Name must be at least 5 characters long")
     private String name;
@@ -22,5 +28,9 @@ public class Taco {
     @NotNull
     @Size(min = 1, message = "You must choose at least 1 ingredient")
     @Builder.Default
-    private List<Ingredient> ingredients = new ArrayList<>();
+    private List<IngredientRef> ingredients = new ArrayList<>();
+
+    public void addIngredient(Ingredient ingredient) {
+        this.ingredients.add(new IngredientRef(this, ingredient));
+    }
 }

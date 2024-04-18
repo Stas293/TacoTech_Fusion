@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class TacoOrder {
+    private Long id;
+
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
 
@@ -30,6 +33,9 @@ public class TacoOrder {
     private String deliveryState;
 
     @NotBlank(message = "Zip code is required")
+    private String deliveryZip;
+
+    @NotBlank(message = "Zip code is required")
     @CreditCardNumber(message = "Not a valid credit card number")
     private String ccNumber;
 
@@ -38,6 +44,9 @@ public class TacoOrder {
 
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
+
+    @Builder.Default
+    private LocalDateTime placedAt = LocalDateTime.now();
 
     @Builder.Default
     private List<Taco> tacos = new ArrayList<>();

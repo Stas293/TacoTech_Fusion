@@ -9,5 +9,8 @@ spring:
   threads:
     virtual:
       enabled: true
+  datasource:
+    generate-unique-name: false
+    name: tacodb
 server:
   shutdown: graceful
