@@ -1,2 +1,13 @@
-logging.level.root=TRACE
-spring.mvc.hiddenmethod.filter.enabled=true
+logging:
+  level:
+    root: trace
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  threads:
+    virtual:
+      enabled: true
+server:
+  shutdown: graceful
