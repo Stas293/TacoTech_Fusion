@@ -12,5 +12,11 @@ spring:
   datasource:
     generate-unique-name: false
     name: tacodb
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
 server:
   shutdown: graceful

@@ -4,21 +4,20 @@ create table if not exists Taco_Order
     delivery_Name   varchar(255) not null,
     delivery_Street varchar(255) not null,
     delivery_City   varchar(255) not null,
-    delivery_State  varchar(255)  not null,
+    delivery_State  varchar(255) not null,
     delivery_Zip    varchar(255) not null,
     cc_number       varchar(255) not null,
-    cc_expiration   varchar(255)  not null,
-    cc_cvv          varchar(255)  not null,
-    placed_at       timestamp   not null
+    cc_expiration   varchar(255) not null,
+    cc_cvv          varchar(255) not null,
+    placed_at       timestamp    not null
 );
 
 create table if not exists Taco
 (
     id             identity,
     name           varchar(255) not null,
-    taco_order     bigint      not null,
-    taco_order_key bigint      not null,
-    created_at     timestamp   not null
+    taco_order     bigint       not null,
+    created_at     timestamp    not null
 );
 
 create table if not exists Ingredient
@@ -30,10 +29,9 @@ create table if not exists Ingredient
 
 create table if not exists Ingredient_Ref
 (
-    id      identity,
-    taco bigint not null,
-    ingredient bigint not null,
-    taco_key bigint not null
+    id         identity,
+    taco       bigint not null,
+    ingredient bigint not null
 );
 
 alter table Taco

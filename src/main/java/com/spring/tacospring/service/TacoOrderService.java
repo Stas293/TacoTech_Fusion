@@ -2,15 +2,11 @@ package com.spring.tacospring.service;
 
 import com.spring.tacospring.data.IngredientRepository;
 import com.spring.tacospring.data.TacoOrderRepository;
-import com.spring.tacospring.model.Ingredient;
-import com.spring.tacospring.model.IngredientRef;
-import com.spring.tacospring.model.Taco;
 import com.spring.tacospring.model.TacoOrder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +17,13 @@ public class TacoOrderService {
 
     @Transactional
     public TacoOrder save(TacoOrder order) {
+        order.getTacos().forEach(taco -> {
+            taco.setTacoOrder(order);
+            taco.getIngredients().forEach(ingredientRef -> {
+                ingredientRef.setIngredient(ingredientRepository.findById(ingredientRef.getIngredient().getId()).orElse(null));
+                ingredientRef.setTaco(taco);
+            });
+        });
         return tacoOrderRepository.save(order);
     }
 
@@ -31,16 +34,14 @@ public class TacoOrderService {
 
     @Transactional(readOnly = true)
     public TacoOrder findById(Long id) {
-        Optional<TacoOrder> order = tacoOrderRepository.findById(id);
-        if (order.isPresent()) {
-            for (Taco taco : order.get().getTacos()) {
-                List<Ingredient> ingredients = ingredientRepository.findAllByTacoId(taco.getId());
-                List<IngredientRef> ingredientRefs = ingredients.stream()
-                        .map(IngredientRef::new)
-                        .toList();
-                taco.setIngredients(ingredientRefs);
-            }
+        Optional<TacoOrder> completeTacoOrder = tacoOrderRepository.findCompleteTacoOrderById(id);
+        if (completeTacoOrder.isPresent()) {
+            TacoOrder tacoOrder = completeTacoOrder.get();
+            tacoOrder.getTacos().forEach(taco -> {
+                taco.setTacoOrder(null);
+            });
+            return tacoOrder;
         }
-        return order.orElse(null);
+        return null;
     }
 }
