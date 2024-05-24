@@ -4,18 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class IngredientRef {
+    @Id
     private Long id;
-    private Taco taco;
-    private Ingredient ingredient;
+    private Long ingredient;
 
-    public IngredientRef(Taco taco, Ingredient ingredient) {
-        this.taco = taco;
-        this.ingredient = ingredient;
+    @Transient
+    private Ingredient ingredientObject;
+
+    public IngredientRef(Ingredient ingredient) {
+        this.ingredient = ingredient.getId();
+        this.ingredientObject = ingredient;
     }
 }

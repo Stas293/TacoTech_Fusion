@@ -19,7 +19,7 @@ public class IngredientByIdConverter implements Converter<String, IngredientRef>
     @Override
     public IngredientRef convert(String id) {
         log.info("Converting id to ingredient: {}", id);
-        Optional<Ingredient> ingredient = ingredientRepository.findById(id);
-        return ingredient.map(value -> new IngredientRef(null, value)).orElse(null);
+        Optional<Ingredient> ingredient = ingredientRepository.findById(Long.valueOf(id));
+        return ingredient.map(IngredientRef::new).orElse(null);
     }
 }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Taco {
+    @Id
     private Long id;
 
     @Builder.Default
@@ -29,8 +31,4 @@ public class Taco {
     @Size(min = 1, message = "You must choose at least 1 ingredient")
     @Builder.Default
     private List<IngredientRef> ingredients = new ArrayList<>();
-
-    public void addIngredient(Ingredient ingredient) {
-        this.ingredients.add(new IngredientRef(this, ingredient));
-    }
 }

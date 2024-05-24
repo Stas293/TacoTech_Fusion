@@ -6,12 +6,10 @@ import com.spring.tacospring.service.TacoOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 @Slf4j
@@ -38,5 +36,15 @@ public class OrderController {
         tacoOrderService.save(order);
         sessionStatus.setComplete();
         return "redirect:/";
+    }
+
+    @GetMapping
+    public ResponseEntity<Iterable<TacoOrder>> orders() {
+        return ResponseEntity.ok(tacoOrderService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TacoOrder> order(@PathVariable Long id) {
+        return ResponseEntity.ok(tacoOrderService.findById(id));
     }
 }
