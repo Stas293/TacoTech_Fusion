@@ -44,7 +44,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TacoOrder> order(@PathVariable Long id) {
+    public ResponseEntity<TacoOrder> order(@PathVariable String id) {
         return ResponseEntity.ok(tacoOrderService.findById(id));
     }
 }

@@ -1,30 +1,32 @@
 package com.spring.tacospring.model;
 
-import jakarta.persistence.*;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
+import org.springframework.data.cassandra.core.cql.Ordering;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "Taco")
+@Table("tacos")
 public class Taco {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
+    private UUID id = Uuids.timeBased();
 
     @Builder.Default
+    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED,
+            ordering = Ordering.DESCENDING)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @NotNull
@@ -35,33 +37,6 @@ public class Taco {
     @Size(min = 1, message = "You must choose at least 1 ingredient")
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taco", orphanRemoval = true)
-    private List<IngredientRef> ingredients = new ArrayList<>();
-
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "taco_order")
-    private TacoOrder tacoOrder;
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy proxy ?
-                proxy.getHibernateLazyInitializer().getPersistentClass()
-                : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy proxy ?
-                proxy.getHibernateLazyInitializer().getPersistentClass()
-                : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Taco taco = (Taco) o;
-        return getId() != null && Objects.equals(getId(), taco.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy proxy ?
-                proxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();
-    }
+    @Column("ingredients")
+    private List<IngredientUDT> ingredients = new ArrayList<>();
 }
