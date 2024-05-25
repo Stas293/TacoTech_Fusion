@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Orders</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Taco Spring</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/orders">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/design">Design</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>All Orders</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Delivery Name</th>
+            <th>Delivery Street</th>
+            <th>Delivery City</th>
+            <th>Delivery State</th>
+            <th>Delivery Zip</th>
+            <th>Placed At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td><a th:href="@{/orders/{id}(id=${order.id})}" th:text="${order.id}">Order ID</a></td>
+            <td th:text="${order.deliveryName}">Delivery Name</td>
+            <td th:text="${order.deliveryStreet}">Delivery Street</td>
+            <td th:text="${order.deliveryCity}">Delivery City</td>
+            <td th:text="${order.deliveryState}">Delivery State</td>
+            <td th:text="${order.deliveryZip}">Delivery Zip</td>
+            <td th:text="${order.placedAt}">Placed At</td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- Pagination -->
+    <div th:if="${orders.totalPages > 1}">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${orders.first ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/orders(page=${orders.number - 1})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber==orders.number ? 'active' : ''}">
+                <a class="page-link" th:href="@{/orders(page=${pageNumber})}" th:text="${pageNumber + 1}">Page
+                    number</a>
+            </li>
+            <li class="page-item" th:classappend="${orders.last ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/orders(page=${orders.number + 1})}">Next</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container text-center">
+        <span class="text-muted">&copy; 2024 Taco Spring</span>
+    </div>
+</footer>
+</body>
+</html>

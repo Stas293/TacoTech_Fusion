@@ -27,3 +27,14 @@ div.ingredient-group {
 span.validationError {
 	color: red;
 }
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.big-image {
+    width: 100%;
+    height: auto;
+}
