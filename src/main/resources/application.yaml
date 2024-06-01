@@ -18,3 +18,5 @@ spring:
     local-datacenter: datacenter1
 server:
   shutdown: graceful
+  tomcat:
+    relaxed-query-chars: '|,{,},[,],^'
