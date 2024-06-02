@@ -1,30 +1,28 @@
 package com.spring.tacospring.model;
 
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.hibernate.validator.constraints.CreditCardNumber;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table("orders")
+@Document
 public class TacoOrder implements Serializable {
-    @PrimaryKey
-    private UUID id = Uuids.timeBased();
+    @Id
+    private ObjectId id;
 
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
@@ -56,10 +54,9 @@ public class TacoOrder implements Serializable {
 
     @Builder.Default
     @ToString.Exclude
-    @Column("tacos")
-    private List<TacoUDT> tacos = new ArrayList<>();
+    private List<Taco> tacos = new ArrayList<>();
 
     public void add(Taco taco) {
-        this.tacos.add(new TacoUDT(taco));
+        this.tacos.add(taco);
     }
 }

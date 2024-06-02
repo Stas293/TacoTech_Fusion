@@ -1,13 +1,14 @@
 package com.spring.tacospring.dto;
 
+import org.bson.types.ObjectId;
+
 import java.util.List;
-import java.util.UUID;
 
 /**
  * A DTO for the {@link com.spring.tacospring.model.TacoOrder} entity
  */
 public record OrderReadDTO(
-        UUID id,
+        ObjectId id,
         String deliveryName,
         String deliveryStreet,
         String deliveryCity,
