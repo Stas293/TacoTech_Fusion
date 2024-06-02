@@ -1,6 +1,8 @@
 package com.spring.tacospring.controller;
 
 
+import com.spring.tacospring.dto.BaseOrderReadDTO;
+import com.spring.tacospring.dto.OrderReadDTO;
 import com.spring.tacospring.model.TacoOrder;
 import com.spring.tacospring.service.TacoOrderService;
 import com.spring.tacospring.utility.PageModel;
@@ -14,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -43,8 +47,8 @@ public class OrderController {
 
     @GetMapping
     public String orders(Model model, @RequestParam(required = false) String pagingState) {
-        Pageable pageable = PageRequest.of(0, 2);
-        PageModel<TacoOrder> pageModel = tacoOrderService.findAll(pageable, pagingState);
+        Pageable pageable = PageRequest.of(0, 5);
+        PageModel<BaseOrderReadDTO> pageModel = tacoOrderService.findAll(pageable, pagingState);
         model.addAttribute("orders", pageModel.page());
         if (pageModel.nextPagingState() != null) {
             model.addAttribute("nextPagingState", pageModel.nextPagingState());
@@ -54,11 +58,11 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public String order(Model model, @PathVariable String id) {
-        TacoOrder order = tacoOrderService.findById(id);
-        if (order == null) {
+        Optional<OrderReadDTO> order = tacoOrderService.findById(id);
+        if (order.isEmpty()) {
             return "redirect:/orders";
         }
-        model.addAttribute("order", order);
+        model.addAttribute("order", order.get());
         return "order";
     }
 }
