@@ -35,7 +35,7 @@ public class Taco {
     @Size(min = 1, message = "You must choose at least 1 ingredient")
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taco", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taco")
     private List<IngredientRef> ingredients = new ArrayList<>();
 
     @ToString.Exclude

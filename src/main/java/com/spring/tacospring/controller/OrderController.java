@@ -1,16 +1,21 @@
 package com.spring.tacospring.controller;
 
 
+import com.spring.tacospring.dto.OrderReadDTO;
 import com.spring.tacospring.model.TacoOrder;
 import com.spring.tacospring.service.TacoOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -39,12 +44,18 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<TacoOrder>> orders() {
-        return ResponseEntity.ok(tacoOrderService.findAll());
+    public String orders(@PageableDefault(size = 2) Pageable pageable, Model model) {
+        model.addAttribute("orders", tacoOrderService.findAll(pageable));
+        return "orders";
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TacoOrder> order(@PathVariable Long id) {
-        return ResponseEntity.ok(tacoOrderService.findById(id));
+    public String order(@PathVariable Long id, Model model) {
+        Optional<OrderReadDTO> order = tacoOrderService.findById(id);
+        if (order.isEmpty()) {
+            return "redirect:/orders";
+        }
+        model.addAttribute("order", order.get());
+        return "order";
     }
 }

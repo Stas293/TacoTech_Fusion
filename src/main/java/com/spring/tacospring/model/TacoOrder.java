@@ -56,7 +56,7 @@ public class TacoOrder {
 
     @Builder.Default
     @ToString.Exclude
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "tacoOrder")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tacoOrder", fetch = FetchType.LAZY)
     private List<Taco> tacos = new ArrayList<>();
 
     public void add(Taco taco) {

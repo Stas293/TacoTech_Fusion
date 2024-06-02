@@ -2,8 +2,14 @@ package com.spring.tacospring.service;
 
 import com.spring.tacospring.data.IngredientRepository;
 import com.spring.tacospring.data.TacoOrderRepository;
+import com.spring.tacospring.dto.BaseOrderReadDTO;
+import com.spring.tacospring.dto.OrderReadDTO;
+import com.spring.tacospring.mapper.BaseTacoOrderMapper;
+import com.spring.tacospring.mapper.TacoOrderMapper;
 import com.spring.tacospring.model.TacoOrder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +20,8 @@ import java.util.Optional;
 public class TacoOrderService {
     private final TacoOrderRepository tacoOrderRepository;
     private final IngredientRepository ingredientRepository;
+    private final TacoOrderMapper tacoOrderMapper;
+    private final BaseTacoOrderMapper baseTacoOrderMapper;
 
     @Transactional
     public TacoOrder save(TacoOrder order) {
@@ -28,20 +36,14 @@ public class TacoOrderService {
     }
 
     @Transactional(readOnly = true)
-    public Iterable<TacoOrder> findAll() {
-        return tacoOrderRepository.findAll();
+    public Page<BaseOrderReadDTO> findAll(Pageable pageable) {
+        return tacoOrderRepository.findAll(pageable)
+                .map(baseTacoOrderMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public TacoOrder findById(Long id) {
-        Optional<TacoOrder> completeTacoOrder = tacoOrderRepository.findCompleteTacoOrderById(id);
-        if (completeTacoOrder.isPresent()) {
-            TacoOrder tacoOrder = completeTacoOrder.get();
-            tacoOrder.getTacos().forEach(taco -> {
-                taco.setTacoOrder(null);
-            });
-            return tacoOrder;
-        }
-        return null;
+    public Optional<OrderReadDTO> findById(Long id) {
+        return tacoOrderRepository.findCompleteTacoOrderById(id)
+                .map(tacoOrderMapper::toDto);
     }
 }
