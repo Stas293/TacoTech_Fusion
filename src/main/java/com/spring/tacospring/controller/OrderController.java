@@ -1,16 +1,15 @@
 package com.spring.tacospring.controller;
 
 
-import com.spring.tacospring.dto.BaseOrderReadDTO;
 import com.spring.tacospring.dto.OrderReadDTO;
 import com.spring.tacospring.model.TacoOrder;
 import com.spring.tacospring.service.TacoOrderService;
-import com.spring.tacospring.utility.PageModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -46,18 +45,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public String orders(Model model, @RequestParam(required = false) String pagingState) {
-        Pageable pageable = PageRequest.of(0, 5);
-        PageModel<BaseOrderReadDTO> pageModel = tacoOrderService.findAll(pageable, pagingState);
-        model.addAttribute("orders", pageModel.page());
-        if (pageModel.nextPagingState() != null) {
-            model.addAttribute("nextPagingState", pageModel.nextPagingState());
-        }
+    public String orders(@PageableDefault(size = 5) Pageable pageable, Model model) {
+        model.addAttribute("orders", tacoOrderService.findAll(pageable));
         return "orders";
     }
 
     @GetMapping("/{id}")
-    public String order(Model model, @PathVariable String id) {
+    public String order(@PathVariable ObjectId id, Model model) {
         Optional<OrderReadDTO> order = tacoOrderService.findById(id);
         if (order.isEmpty()) {
             return "redirect:/orders";

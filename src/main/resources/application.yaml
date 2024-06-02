@@ -12,11 +12,10 @@ spring:
   datasource:
     generate-unique-name: false
     name: tacodb
-  cassandra:
-    keyspace-name: taco_spring
-    schema-action: recreate
-    local-datacenter: datacenter1
+  data:
+    mongodb:
+      database: tacodb
+      username: taco
+      password: taco
 server:
   shutdown: graceful
-  tomcat:
-    relaxed-query-chars: '|,{,},[,],^'
