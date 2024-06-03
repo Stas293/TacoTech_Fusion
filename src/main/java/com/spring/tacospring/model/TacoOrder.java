@@ -26,19 +26,14 @@ public class TacoOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Delivery name is required")
     private String deliveryName;
 
-    @NotBlank(message = "Street is required")
     private String deliveryStreet;
 
-    @NotBlank(message = "City is required")
     private String deliveryCity;
 
-    @NotBlank(message = "State is required")
     private String deliveryState;
 
-    @NotBlank(message = "Zip code is required")
     private String deliveryZip;
 
     @NotBlank(message = "Zip code is required")

@@ -1,46 +1,59 @@
 create table if not exists Taco_Order
 (
-    id              identity,
-    delivery_Name   varchar(255) not null,
-    delivery_Street varchar(255) not null,
-    delivery_City   varchar(255) not null,
-    delivery_State  varchar(255) not null,
-    delivery_Zip    varchar(255) not null,
-    cc_number       varchar(255) not null,
-    cc_expiration   varchar(255) not null,
-    cc_cvv          varchar(255) not null,
-    placed_at       timestamp    not null
+    id              IDENTITY,
+    delivery_Name   VARCHAR(255) NOT NULL,
+    delivery_Street VARCHAR(255) NOT NULL,
+    delivery_City   VARCHAR(255) NOT NULL,
+    delivery_State  VARCHAR(255) NOT NULL,
+    delivery_Zip    VARCHAR(255) NOT NULL,
+    cc_number       VARCHAR(255) NOT NULL,
+    cc_expiration   VARCHAR(255) NOT NULL,
+    cc_cvv          VARCHAR(255) NOT NULL,
+    placed_at       TIMESTAMP    NOT NULL
 );
 
 create table if not exists Taco
 (
-    id             identity,
-    name           varchar(255) not null,
-    taco_order     bigint       not null,
-    created_at     timestamp    not null
+    id         IDENTITY,
+    name       VARCHAR(255) not null,
+    taco_order BIGINT       NOT NULL,
+    created_at TIMESTAMP    NOT NULL
 );
 
 create table if not exists Ingredient
 (
-    id   identity,
-    name varchar(255) not null,
-    type varchar(255) not null
+    id   IDENTITY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL
 );
 
-create table if not exists Ingredient_Ref
+CREATE TABLE IF NOT EXISTS Ingredient_Ref
 (
-    id         identity,
-    taco       bigint not null,
-    ingredient bigint not null
+    id         IDENTITY,
+    taco       BIGINT NOT NULL,
+    ingredient BIGINT NOT NULL
 );
 
-alter table Taco
-    add foreign key (taco_order) references Taco_Order (id);
+CREATE TABLE IF NOT EXISTS Users
+(
+    id           IDENTITY,
+    username     VARCHAR(255),
+    password     VARCHAR(255),
+    fullname     VARCHAR(255),
+    street       VARCHAR(255),
+    city         VARCHAR(255),
+    state        VARCHAR(255),
+    zip          VARCHAR(255),
+    phone_number VARCHAR(255)
+);
 
-alter table Ingredient_Ref
-    add foreign key (taco) references Taco (id);
+ALTER TABLE Taco
+    ADD FOREIGN KEY (taco_order) REFERENCES Taco_Order (id);
 
-alter table Ingredient_Ref
-    add foreign key (ingredient) references Ingredient (id);
+ALTER TABLE Ingredient_Ref
+    ADD FOREIGN KEY (taco) REFERENCES Taco (id);
+
+ALTER TABLE Ingredient_Ref
+    ADD FOREIGN KEY (ingredient) REFERENCES Ingredient (id);
 
 

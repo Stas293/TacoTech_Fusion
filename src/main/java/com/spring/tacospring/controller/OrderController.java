@@ -26,7 +26,7 @@ public class OrderController {
     private final TacoOrderService tacoOrderService;
 
     @GetMapping("/current")
-    public String orderForm() {
+    public String orderForm(@ModelAttribute("tacoOrder") TacoOrder tacoOrder) {
         return "orderForm";
     }
 
