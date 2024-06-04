@@ -7,10 +7,12 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 <body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
 <div class="container">
     <h1 class="text-center my-4">Design your taco!</h1>
     <img th:src="@{/images/TacoSpring.png}" alt="Taco Composition" class="img-fluid d-block mx-auto">
-    <form method="POST" th:object="${taco}">
+    <form th:object="${taco}" th:method="POST" th:action="@{/design}" class="container">
         <div class="row">
             <div class="col-md-4" id="wraps">
                 <h3>Designate your wrap:</h3>
@@ -142,9 +144,14 @@
                 </div>
             </div>
         </div>
+        <div th:if="${#fields.hasErrors('ingredients')}" th:each="error : ${#fields.errors('ingredients')}"
+             th:text="${error}" class="text-danger"></div>
         <div class="form-group">
             <label for="tacoName">Name your taco creation:</label>
-            <input type="text" class="form-control" id="tacoName" th:field="*{name}" required minlength="5"/>
+            <input type="text" class="form-control" id="tacoName" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                     name="name" th:field="*{name}" required/>
+            <div th:if="${#fields.hasErrors('name')}" th:each="error : ${#fields.errors('name')}"
+                    class="invalid-feedback" th:text="${error}"></div>
         </div>
         <button type="submit" class="btn btn-primary">Submit Your Taco</button>
     </form>

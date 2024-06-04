@@ -28,13 +28,17 @@ span.validationError {
 	color: red;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
 .big-image {
     width: 100%;
     height: auto;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.footer {
+    margin-top: auto;
 }

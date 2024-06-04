@@ -13,15 +13,25 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Ingredient {
+@Table(name = "Ingredient_Ref")
+public class IngredientRef {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "ingredient")
+    @ToString.Exclude
+    private Ingredient ingredient;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "taco")
+    @ToString.Exclude
+    private Taco taco;
+
+    public IngredientRef(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
 
     @Override
     public final boolean equals(Object o) {
@@ -34,7 +44,7 @@ public class Ingredient {
                 proxy.getHibernateLazyInitializer().getPersistentClass()
                 : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Ingredient that = (Ingredient) o;
+        IngredientRef that = (IngredientRef) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
@@ -43,25 +53,5 @@ public class Ingredient {
         return this instanceof HibernateProxy proxy ?
                 proxy.getHibernateLazyInitializer().getPersistentClass().hashCode()
                 : getClass().hashCode();
-    }
-
-    public enum Type {
-        WRAP,
-        BEEF,
-        CHICKEN,
-        PORK,
-        FISH,
-        BEANS,
-        LETTUCE,
-        TOMATOES,
-        ONIONS,
-        BELL_PEPPERS,
-        CHEDDAR,
-        MONTEREY_JACK,
-        QUESO_FRESCO,
-        SALSA,
-        GUACAMOLE,
-        SOUR_CREAM,
-        HOT_SAUCE
     }
 }

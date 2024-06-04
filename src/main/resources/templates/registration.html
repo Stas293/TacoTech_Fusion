@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Taco Cloud</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+
+<div class="container text-center">
+    <h1>Register for Taco Cloud</h1>
+</div>
+
+<form method="POST" th:action="@{/register}" class="container" th:object="${user}">
+    <div class="form-group">
+        <label for="username">Username: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
+               name="username" th:field="*{username}" id="username"/>
+        <div th:if="${#fields.hasErrors('username')}" th:each="error : ${#fields.errors('username')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="password">Password: </label>
+        <input type="password" class="form-control" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+               name="password" th:field="*{password}" id="password"/>
+        <div th:if="${#fields.hasErrors('password')}" th:each="error : ${#fields.errors('password')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="confirm">Confirm password: </label>
+        <input type="password" class="form-control" th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid'"
+               name="confirm" th:field="*{confirmPassword}" id="confirm"/>
+        <div th:if="${#fields.hasErrors('confirmPassword')}" th:each="error : ${#fields.errors('confirmPassword')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="fullname">Full name: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('fullname')} ? 'is-invalid'"
+               name="fullname" th:field="*{fullname}" id="fullname"/>
+        <div th:if="${#fields.hasErrors('fullname')}" th:each="error : ${#fields.errors('fullname')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="street">Street: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('street')} ? 'is-invalid'"
+               name="street" th:field="*{street}" id="street"/>
+        <div th:if="${#fields.hasErrors('street')}" th:each="error : ${#fields.errors('street')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="city">City: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('city')} ? 'is-invalid'"
+               name="city" th:field="*{city}" id="city"/>
+        <div th:if="${#fields.hasErrors('city')}" th:each="error : ${#fields.errors('city')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="state">State: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('state')} ? 'is-invalid'"
+               name="state" th:field="*{state}" id="state"/>
+        <div th:if="${#fields.hasErrors('state')}" th:each="error : ${#fields.errors('state')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="zip">Zip: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('zip')} ? 'is-invalid'"
+               name="zip" th:field="*{zip}" id="zip"/>
+        <div th:if="${#fields.hasErrors('zip')}" th:each="error : ${#fields.errors('zip')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Phone: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'is-invalid'"
+               name="phone" th:field="*{phoneNumber}" id="phoneNumber"/>
+        <div th:if="${#fields.hasErrors('phoneNumber')}" th:each="error : ${#fields.errors('phoneNumber')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
+    <input type="submit" value="Register" class="btn btn-primary"/>
+</form>
+
+<footer class="footer py-3 bg-light">
+    <div class="container text-center">
+        <span class="text-muted">&copy; 2024 Taco Spring</span>
+    </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
