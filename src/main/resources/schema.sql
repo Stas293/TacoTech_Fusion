@@ -9,7 +9,8 @@ create table if not exists Taco_Order
     cc_number       VARCHAR(255) NOT NULL,
     cc_expiration   VARCHAR(255) NOT NULL,
     cc_cvv          VARCHAR(255) NOT NULL,
-    placed_at       TIMESTAMP    NOT NULL
+    placed_at       TIMESTAMP    NOT NULL,
+    user_id         BIGINT       NOT NULL
 );
 
 create table if not exists Taco
@@ -55,5 +56,8 @@ ALTER TABLE Ingredient_Ref
 
 ALTER TABLE Ingredient_Ref
     ADD FOREIGN KEY (ingredient) REFERENCES Ingredient (id);
+
+ALTER TABLE Taco_Order
+    ADD FOREIGN KEY (user_id) REFERENCES Users (id);
 
 

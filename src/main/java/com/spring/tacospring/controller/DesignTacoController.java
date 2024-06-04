@@ -4,13 +4,17 @@ import com.spring.tacospring.data.IngredientRepository;
 import com.spring.tacospring.model.Ingredient;
 import com.spring.tacospring.model.Taco;
 import com.spring.tacospring.model.TacoOrder;
+import com.spring.tacospring.model.User;
+import com.spring.tacospring.service.TacoOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -21,6 +25,7 @@ import java.util.List;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
     private final IngredientRepository ingredientRepo;
+    private final TacoOrderService tacoOrderService;
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
@@ -32,8 +37,8 @@ public class DesignTacoController {
     }
 
     @ModelAttribute(name = "tacoOrder")
-    public TacoOrder order() {
-        return new TacoOrder();
+    public TacoOrder order(@AuthenticationPrincipal User user) {
+        return tacoOrderService.createOrder(user);
     }
 
     @ModelAttribute(name = "taco")
@@ -47,10 +52,12 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processTaco(@Valid Taco taco, Errors errors,
-                              @ModelAttribute TacoOrder tacoOrder) {
+    public String processTaco(@Valid Taco taco, BindingResult errors,
+                              @ModelAttribute TacoOrder tacoOrder, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
-            return "design";
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.taco", errors);
+            redirectAttributes.addFlashAttribute("taco", taco);
+            return "redirect:/design";
         }
 
         tacoOrder.add(taco);

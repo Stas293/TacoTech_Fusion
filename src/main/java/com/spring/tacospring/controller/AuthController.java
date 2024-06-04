@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,14 +21,17 @@ public class AuthController {
     private final UserRepository userRepo;
     private final UserRegistrationMapper mapper;
 
-    @ModelAttribute("user")
-    public UserRegistrationDTO userRegistrationDTO() {
-        return new UserRegistrationDTO();
+    @GetMapping("/register")
+    public String registerForm(Model model) {
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new UserRegistrationDTO());
+        }
+        return "registration";
     }
 
-    @GetMapping("/register")
-    public String registerForm() {
-        return "registration";
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
     @PostMapping("/register")

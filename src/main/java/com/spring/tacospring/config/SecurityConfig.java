@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Configuration
 public class SecurityConfig {
@@ -30,6 +31,11 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .requestMatchers("/login", "/register", "/css/styles.css").permitAll()
+                        .requestMatchers("/orders/**", "/design/**").access(
+                                new WebExpressionAuthorizationManager("hasRole('USER') && " +
+                                        "T(java.time.LocalTime).now().isAfter(T(java.time.LocalTime).of(8, 0)) && " +
+                                        "T(java.time.LocalTime).now().isBefore(T(java.time.LocalTime).of(20, 0))")
+                        )
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
@@ -38,7 +44,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                 )
                 .formLogin(login -> login
-                        .defaultSuccessUrl("/", true)
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
                 )
                 .build();
     }

@@ -49,6 +49,11 @@ public class TacoOrder {
     @Builder.Default
     private LocalDateTime placedAt = LocalDateTime.now();
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
+
     @Builder.Default
     @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tacoOrder", fetch = FetchType.LAZY)

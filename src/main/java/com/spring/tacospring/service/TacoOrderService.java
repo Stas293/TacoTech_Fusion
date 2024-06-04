@@ -7,6 +7,7 @@ import com.spring.tacospring.dto.OrderReadDTO;
 import com.spring.tacospring.mapper.BaseTacoOrderMapper;
 import com.spring.tacospring.mapper.TacoOrderMapper;
 import com.spring.tacospring.model.TacoOrder;
+import com.spring.tacospring.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,8 @@ public class TacoOrderService {
     private final BaseTacoOrderMapper baseTacoOrderMapper;
 
     @Transactional
-    public TacoOrder save(TacoOrder order) {
+    public TacoOrder save(TacoOrder order, User user) {
+        order.setUser(user);
         order.getTacos().forEach(taco -> {
             taco.setTacoOrder(order);
             taco.getIngredients().forEach(ingredientRef -> {
@@ -36,14 +38,24 @@ public class TacoOrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BaseOrderReadDTO> findAll(Pageable pageable) {
-        return tacoOrderRepository.findAll(pageable)
+    public Page<BaseOrderReadDTO> findAll(Pageable pageable, User user) {
+        return tacoOrderRepository.findAllByUser_IdOrderByPlacedAtDesc(pageable, user.getId())
                 .map(baseTacoOrderMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public Optional<OrderReadDTO> findById(Long id) {
-        return tacoOrderRepository.findCompleteTacoOrderById(id)
+    public Optional<OrderReadDTO> findById(Long id, User user) {
+        return tacoOrderRepository.findCompleteTacoOrderById(id, user.getId())
                 .map(tacoOrderMapper::toDto);
+    }
+
+    public TacoOrder createOrder(User user) {
+        return TacoOrder.builder()
+                .deliveryCity(user.getCity())
+                .deliveryName(user.getFullname())
+                .deliveryState(user.getState())
+                .deliveryStreet(user.getStreet())
+                .deliveryZip(user.getZip())
+                .build();
     }
 }
