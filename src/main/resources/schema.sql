@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS Users
     city         VARCHAR(255),
     state        VARCHAR(255),
     zip          VARCHAR(255),
-    phone_number VARCHAR(255)
+    phone_number VARCHAR(255),
+    email        VARCHAR(255)
 );
 
 ALTER TABLE Taco

@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,8 +16,9 @@ import java.util.Objects;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "Users")
-public class User implements UserDetails {
+public class User implements UserInformation, AddressInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +37,9 @@ public class User implements UserDetails {
 
     private String zip;
 
-    private  String phoneNumber;
+    private String phoneNumber;
+
+    private String email;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

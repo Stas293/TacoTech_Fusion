@@ -3,7 +3,7 @@ package com.spring.tacospring.controller;
 
 import com.spring.tacospring.dto.OrderReadDTO;
 import com.spring.tacospring.model.TacoOrder;
-import com.spring.tacospring.model.User;
+import com.spring.tacospring.model.UserInformation;
 import com.spring.tacospring.service.TacoOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,7 +37,7 @@ public class OrderController {
     @PostMapping
     public String processOrder(@Valid TacoOrder order, BindingResult errors,
                                SessionStatus sessionStatus, RedirectAttributes redirectAttributes,
-                               @AuthenticationPrincipal User user) {
+                               @AuthenticationPrincipal UserDetails user) {
         if (errors.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.tacoOrder", errors);
             return "redirect:/orders/current";
@@ -50,14 +51,14 @@ public class OrderController {
 
     @GetMapping
     public String orders(@PageableDefault(size = 5) Pageable pageable, Model model,
-                         @AuthenticationPrincipal User user) {
-        model.addAttribute("orders", tacoOrderService.findAll(pageable, user));
+                         @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("orders", tacoOrderService.findAll(pageable, (UserInformation) userDetails));
         return "orders";
     }
 
     @GetMapping("/{id}")
-    public String order(@PathVariable Long id, Model model, @AuthenticationPrincipal User user) {
-        Optional<OrderReadDTO> order = tacoOrderService.findById(id, user);
+    public String order(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<OrderReadDTO> order = tacoOrderService.findById(id, (UserInformation) userDetails);
         if (order.isEmpty()) {
             return "redirect:/orders";
         }
