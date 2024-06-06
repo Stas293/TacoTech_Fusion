@@ -1,15 +1,13 @@
 package com.spring.tacospring.controller;
 
 import com.spring.tacospring.data.IngredientRepository;
-import com.spring.tacospring.model.Ingredient;
-import com.spring.tacospring.model.Taco;
-import com.spring.tacospring.model.TacoOrder;
-import com.spring.tacospring.model.User;
+import com.spring.tacospring.model.*;
 import com.spring.tacospring.service.TacoOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,8 +35,8 @@ public class DesignTacoController {
     }
 
     @ModelAttribute(name = "tacoOrder")
-    public TacoOrder order(@AuthenticationPrincipal User user) {
-        return tacoOrderService.createOrder(user);
+    public TacoOrder order(@AuthenticationPrincipal UserDetails user) {
+        return tacoOrderService.createOrder((AddressInformation) user);
     }
 
     @ModelAttribute(name = "taco")

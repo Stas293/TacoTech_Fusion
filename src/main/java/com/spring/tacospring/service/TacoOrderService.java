@@ -6,11 +6,14 @@ import com.spring.tacospring.dto.BaseOrderReadDTO;
 import com.spring.tacospring.dto.OrderReadDTO;
 import com.spring.tacospring.mapper.BaseTacoOrderMapper;
 import com.spring.tacospring.mapper.TacoOrderMapper;
+import com.spring.tacospring.model.AddressInformation;
 import com.spring.tacospring.model.TacoOrder;
 import com.spring.tacospring.model.User;
+import com.spring.tacospring.model.UserInformation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +28,11 @@ public class TacoOrderService {
     private final BaseTacoOrderMapper baseTacoOrderMapper;
 
     @Transactional
-    public TacoOrder save(TacoOrder order, User user) {
-        order.setUser(user);
+    public TacoOrder save(TacoOrder order, UserDetails user) {
+        UserInformation userInformation = (UserInformation) user;
+        order.setUser(User.builder()
+                .id(userInformation.getId())
+                .build());
         order.getTacos().forEach(taco -> {
             taco.setTacoOrder(order);
             taco.getIngredients().forEach(ingredientRef -> {
@@ -38,18 +44,18 @@ public class TacoOrderService {
     }
 
     @Transactional(readOnly = true)
-    public Page<BaseOrderReadDTO> findAll(Pageable pageable, User user) {
-        return tacoOrderRepository.findAllByUser_IdOrderByPlacedAtDesc(pageable, user.getId())
+    public Page<BaseOrderReadDTO> findAll(Pageable pageable, UserInformation userDetails) {
+        return tacoOrderRepository.findAllByUser_IdOrderByPlacedAtDesc(pageable, userDetails.getId())
                 .map(baseTacoOrderMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public Optional<OrderReadDTO> findById(Long id, User user) {
+    public Optional<OrderReadDTO> findById(Long id, UserInformation user) {
         return tacoOrderRepository.findCompleteTacoOrderById(id, user.getId())
                 .map(tacoOrderMapper::toDto);
     }
 
-    public TacoOrder createOrder(User user) {
+    public TacoOrder createOrder(AddressInformation user) {
         return TacoOrder.builder()
                 .deliveryCity(user.getCity())
                 .deliveryName(user.getFullname())

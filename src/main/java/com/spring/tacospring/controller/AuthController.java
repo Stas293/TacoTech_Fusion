@@ -1,8 +1,7 @@
 package com.spring.tacospring.controller;
 
-import com.spring.tacospring.data.UserRepository;
 import com.spring.tacospring.dto.UserRegistrationDTO;
-import com.spring.tacospring.mapper.UserRegistrationMapper;
+import com.spring.tacospring.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
-    private final UserRepository userRepo;
-    private final UserRegistrationMapper mapper;
+    private final UserService userService;
 
     @GetMapping("/register")
     public String registerForm(Model model) {
@@ -46,10 +44,9 @@ public class AuthController {
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             return "redirect:/register";
         }
-        if (userRepo.findByUsername(user.getUsername()).isPresent()) {
+        if (!userService.register(user)) {
             return "redirect:/register";
         }
-        userRepo.save(mapper.toEntity(user));
         return "redirect:/login";
     }
 }

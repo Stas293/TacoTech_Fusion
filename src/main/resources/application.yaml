@@ -18,5 +18,17 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope:
+              - openid
+              - email
+              - profile
+
 server:
   shutdown: graceful

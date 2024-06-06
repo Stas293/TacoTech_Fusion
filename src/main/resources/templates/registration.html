@@ -76,6 +76,13 @@
         <div th:if="${#fields.hasErrors('phoneNumber')}" th:each="error : ${#fields.errors('phoneNumber')}"
              class="invalid-feedback" th:text="${error}"></div>
     </div>
+    <div class="form-group">
+        <label for="email">Email: </label>
+        <input type="text" class="form-control" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+               name="email" th:field="*{email}" id="email"/>
+        <div th:if="${#fields.hasErrors('email')}" th:each="error : ${#fields.errors('email')}"
+             class="invalid-feedback" th:text="${error}"></div>
+    </div>
     <input type="submit" value="Register" class="btn btn-primary"/>
 </form>
 
